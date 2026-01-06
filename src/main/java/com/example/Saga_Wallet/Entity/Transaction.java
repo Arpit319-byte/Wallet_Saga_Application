@@ -1,10 +1,19 @@
     package com.example.Saga_Wallet.Entity;
 
     import jakarta.persistence.*;
+    import lombok.AllArgsConstructor;
+    import lombok.Getter;
+    import lombok.NoArgsConstructor;
+    import lombok.Setter;
+
     import java.math.BigDecimal;
 
 
-
+@Getter
+@Setter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
     public class Transaction {
 
         @Id
