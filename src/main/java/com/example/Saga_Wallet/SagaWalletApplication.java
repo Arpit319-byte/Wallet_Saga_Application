@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SagaWalletApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SagaWalletApplication.class, args);
+
+        SpringApplication.run(SagaWalletApplication.class, args);
 	}
 
 }
