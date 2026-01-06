@@ -8,6 +8,9 @@ import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DebitSourceWalletStep implements SagaStep {
 
     private WalletRepository walletRepository;
@@ -16,13 +19,14 @@ public class DebitSourceWalletStep implements SagaStep {
     @Transactional
     public boolean execute(SagaContext context) {
 
-        Long fromWalletId=context.getLong("fromWalletId");
-        BigDecimal amount=context.getBigDecimal("amount");
+        Long fromWalletId = context.getLong("fromWalletId");
+        BigDecimal amount = context.getBigDecimal("amount");
 
-        Wallet wallet=walletRepository.findWalletByLock(fromWalletId).orElseThrow(()->new RuntimeException("Wallet not found"));
+        Wallet wallet = walletRepository.findWalletByLock(fromWalletId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
         wallet.debit(amount);
 
-        context.put("fromWalletAfterDebit",wallet);
+        context.put("fromWalletAfterDebit", wallet);
         return false;
     }
 
@@ -30,13 +34,14 @@ public class DebitSourceWalletStep implements SagaStep {
     @Transactional
     public boolean compensate(SagaContext context) {
 
-        Long fromWalletId=context.getLong("fromWalletId");
-        BigDecimal amount=context.getBigDecimal("amount");
+        Long fromWalletId = context.getLong("fromWalletId");
+        BigDecimal amount = context.getBigDecimal("amount");
 
-        Wallet wallet=walletRepository.findWalletByLock(fromWalletId).orElseThrow(()->new RuntimeException("Wallet not found"));
+        Wallet wallet = walletRepository.findWalletByLock(fromWalletId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
         wallet.credit(amount);
 
-        context.put("fromWalletAfterDebitCompensate",wallet);
+        context.put("fromWalletAfterDebitCompensate", wallet);
         return true;
 
     }

@@ -1,6 +1,5 @@
 package com.example.Saga_Wallet.Service.Saga.Step;
 
-
 import com.example.Saga_Wallet.Entity.Wallet;
 import com.example.Saga_Wallet.Repository.WalletRepository;
 import com.example.Saga_Wallet.Service.Saga.SagaContext;
@@ -9,6 +8,9 @@ import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CreditDestinationWalletStep implements SagaStep {
 
     private WalletRepository walletRepository;
@@ -16,14 +18,15 @@ public class CreditDestinationWalletStep implements SagaStep {
     @Override
     @Transactional
     public boolean execute(SagaContext context) {
-        Long toWalletId=context.getLong("toWalletId");
-        BigDecimal amount=context.getBigDecimal("amount");
+        Long toWalletId = context.getLong("toWalletId");
+        BigDecimal amount = context.getBigDecimal("amount");
 
-        Wallet wallet=walletRepository.findWalletByLock(toWalletId).orElseThrow(()-> new RuntimeException("wallet not found"));
+        Wallet wallet = walletRepository.findWalletByLock(toWalletId)
+                .orElseThrow(() -> new RuntimeException("wallet not found"));
         wallet.credit(amount);
         walletRepository.save(wallet);
 
-        context.put("toWalletBalanceAfterCredit",wallet.getBalance());
+        context.put("toWalletBalanceAfterCredit", wallet.getBalance());
         return true;
     }
 
@@ -31,14 +34,15 @@ public class CreditDestinationWalletStep implements SagaStep {
     @Transactional
     public boolean compensate(SagaContext context) {
 
-        Long toWalletId=context.getLong("toWalletId");
-        BigDecimal amount=context.getBigDecimal("amount");
+        Long toWalletId = context.getLong("toWalletId");
+        BigDecimal amount = context.getBigDecimal("amount");
 
-        Wallet wallet=walletRepository.findWalletByLock(toWalletId).orElseThrow(()-> new RuntimeException("wallet not found"));
+        Wallet wallet = walletRepository.findWalletByLock(toWalletId)
+                .orElseThrow(() -> new RuntimeException("wallet not found"));
         wallet.debit(amount);
         walletRepository.save(wallet);
 
-        context.put("toWalletBalanceAfterCreditCompensation",wallet.getBalance());
+        context.put("toWalletBalanceAfterCreditCompensation", wallet.getBalance());
         return false;
     }
 

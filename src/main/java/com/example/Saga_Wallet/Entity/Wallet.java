@@ -8,8 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "wallet")
+@Slf4j
 public class Wallet {
 
     @Id
@@ -25,7 +27,7 @@ public class Wallet {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "is_active", nullable = false)

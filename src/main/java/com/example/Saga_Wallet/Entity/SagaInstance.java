@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "saga_instance")
+@Slf4j
 public class SagaInstance {
 
     @Id
